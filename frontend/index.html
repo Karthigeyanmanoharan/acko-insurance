@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acko Insurance AI · Next-Gen Insurance Platform</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans:    ['Inter', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#0a0e27',
+            surface:  '#1a1f3a',
+            neon:     '#00d9ff',
+            violet:   '#a855f7',
+            mint:     '#00ffa3',
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="font-sans text-white min-h-screen overflow-x-hidden">
+
+  <!-- Animated gradient background -->
+  <div class="fixed inset-0 -z-10 bg-midnight">
+    <div class="absolute top-0 -left-32 w-96 h-96 bg-neon/20 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 -right-32 w-96 h-96 bg-violet/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-mint/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 px-6 py-5">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon to-violet flex items-center justify-center font-display font-bold text-midnight">A</div>
+        <span class="font-display text-xl font-bold">Acko<span class="text-neon">.ai</span></span>
+      </div>
+      <div class="hidden sm:flex items-center gap-2 text-xs text-slate-400">
+        <span class="w-2 h-2 rounded-full bg-mint animate-pulse"></span>
+        AI-Powered · Live
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <main class="relative z-10 px-6 pt-12 pb-20">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- Hero text -->
+      <div class="text-center mb-16 fade-in">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300 mb-6">
+          <span class="w-1.5 h-1.5 rounded-full bg-neon"></span>
+          Powered by Gemini & RAG
+        </div>
+        <h1 class="font-display text-5xl md:text-7xl font-bold leading-tight mb-6">
+          Insurance,<br />
+          <span class="bg-gradient-to-r from-neon via-violet to-mint bg-clip-text text-transparent">
+            reimagined by AI
+          </span>
+        </h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Chat to get instant policy answers, fair quotes, and claim predictions —
+          all in seconds. No agents. No waiting. No paperwork.
+        </p>
+      </div>
+
+      <!-- Two role cards -->
+      <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto fade-in" style="animation-delay: 0.2s;">
+
+        <!-- Customer card -->
+        <div class="glass-card group">
+          <div class="card-glow card-glow-neon"></div>
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-neon/10 border border-neon/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <svg class="w-7 h-7 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-2xl font-bold mb-2">I'm a Customer</h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+              Chat with our AI assistant. Ask anything about your policy,
+              get instant quotes, or file a claim with one photo.
+            </p>
+            <div class="space-y-3">
+              <a href="login-customer.html" class="btn-primary block text-center">
+                Login →
+              </a>
+              <a href="signup.html" class="btn-ghost block text-center">
+                Create Account
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Manager card -->
+        <div class="glass-card group">
+          <div class="card-glow card-glow-violet"></div>
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-violet/10 border border-violet/30 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+              <svg class="w-7 h-7 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="font-display text-2xl font-bold mb-2">I'm an Acko Manager</h3>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+              Live analytics dashboards and an AI assistant that answers
+              business questions in plain English — no SQL needed.
+            </p>
+            <div class="space-y-3">
+              <a href="login-manager.html" class="btn-primary-violet block text-center">
+                Manager Login →
+              </a>
+              <p class="text-xs text-slate-500 text-center">
+                Accounts provisioned by Acko admin
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Feature strip -->
+      <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto fade-in" style="animation-delay: 0.4s;">
+        <div class="text-center">
+          <div class="font-display text-3xl font-bold text-neon">24/7</div>
+          <div class="text-xs text-slate-500 mt-1">AI Support</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-3xl font-bold text-violet">&lt;5s</div>
+          <div class="text-xs text-slate-500 mt-1">Quote Time</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-3xl font-bold text-mint">2.8Cr+</div>
+          <div class="text-xs text-slate-500 mt-1">Customers</div>
+        </div>
+        <div class="text-center">
+          <div class="font-display text-3xl font-bold text-white">100%</div>
+          <div class="text-xs text-slate-500 mt-1">Digital</div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="relative z-10 text-center text-xs text-slate-600 py-6 border-t border-white/5">
+    Built with Gemini · ChromaDB · FastAPI · For GUVI Capstone
+  </footer>
+
+</body>
+</html>

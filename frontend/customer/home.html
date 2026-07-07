@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard · Acko.ai</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans:    ['Inter', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#0a0e27',
+            surface:  '#1a1f3a',
+            neon:     '#00d9ff',
+            violet:   '#a855f7',
+            mint:     '#00ffa3',
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body class="font-sans text-white min-h-screen overflow-x-hidden">
+
+  <!-- Animated background -->
+  <div class="fixed inset-0 -z-10 bg-midnight">
+    <div class="absolute top-0 -left-32 w-96 h-96 bg-neon/15 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 -right-32 w-96 h-96 bg-violet/15 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+  </div>
+
+  <!-- Top navbar -->
+  <header class="relative z-30 px-6 py-4 border-b border-white/5 backdrop-blur-md bg-midnight/40 sticky top-0">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="../index.html" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-neon to-violet flex items-center justify-center font-display font-bold text-midnight">A</div>
+        <div>
+          <div class="font-display font-bold leading-tight">Acko<span class="text-neon">.ai</span></div>
+          <div class="text-[10px] text-slate-500 uppercase tracking-wider">Customer Portal</div>
+        </div>
+      </a>
+
+      <div class="hidden md:flex items-center gap-1 text-sm">
+        <a href="#" class="nav-link nav-link-active">Dashboard</a>
+        <a href="#" class="nav-link">My Policies</a>
+        <a href="#" class="nav-link">Claims</a>
+        <a href="#" class="nav-link">Renew</a>
+        <a href="#" class="nav-link">Support</a>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/10">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-neon to-violet text-midnight text-sm font-bold flex items-center justify-center" id="avatar-initials">P</div>
+          <div class="text-right pr-1">
+            <div class="text-sm font-semibold leading-tight" id="user-name">—</div>
+            <div class="text-[11px] text-slate-500" id="user-email">—</div>
+          </div>
+        </div>
+        <button id="logout-btn" class="text-sm text-slate-400 hover:text-pink-300 transition px-3 py-1.5 rounded-lg border border-white/5 hover:border-pink-500/30">
+          Logout
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main content -->
+  <main class="relative z-10 max-w-7xl mx-auto px-6 py-8">
+
+    <!-- Greeting + member info -->
+    <section class="mb-8 fade-in">
+      <div class="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <h1 class="font-display text-4xl md:text-5xl font-bold">
+            Hi <span id="greeting-name" class="bg-gradient-to-r from-neon to-violet bg-clip-text text-transparent">there</span> 👋
+          </h1>
+          <p class="text-slate-400 mt-1">Here's a quick overview of your account.</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-slate-400 bg-white/5 border border-white/10 rounded-lg px-4 py-2.5 backdrop-blur-sm">
+          <svg class="w-4 h-4 text-mint" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Member since <span id="member-since" class="font-semibold text-white ml-1">—</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick stats -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8 fade-in" style="animation-delay: 0.1s;">
+      <div class="glass-card !p-5">
+        <div class="text-[11px] text-slate-500 uppercase tracking-wider font-medium mb-2">Active Policies</div>
+        <div class="font-display text-3xl font-bold text-neon">0</div>
+        <div class="text-xs text-slate-500 mt-1">No active policies</div>
+      </div>
+      <div class="glass-card !p-5">
+        <div class="text-[11px] text-slate-500 uppercase tracking-wider font-medium mb-2">Open Claims</div>
+        <div class="font-display text-3xl font-bold text-violet" id="stat-claims">0</div>
+        <div class="text-xs text-slate-500 mt-1">No claims filed</div>
+      </div>
+      <div class="glass-card !p-5">
+        <div class="text-[11px] text-slate-500 uppercase tracking-wider font-medium mb-2">Quotes Generated</div>
+        <div class="font-display text-3xl font-bold text-mint" id="stat-quotes">0</div>
+        <div class="text-xs text-slate-500 mt-1">No quotes yet</div>
+      </div>
+      <div class="glass-card !p-5">
+        <div class="text-[11px] text-slate-500 uppercase tracking-wider font-medium mb-2">AI Assistant</div>
+        <div class="font-display text-3xl font-bold text-white flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-mint animate-pulse"></span>Live
+        </div>
+        <div class="text-xs text-slate-500 mt-1">Available 24/7</div>
+      </div>
+    </section>
+
+    <!-- Two-column layout: policies + sidebar -->
+    <section class="grid lg:grid-cols-3 gap-6 fade-in" style="animation-delay: 0.2s;">
+
+      <!-- LEFT: My Policies + Activity -->
+      <div class="lg:col-span-2 space-y-6">
+
+        <!-- My Policies -->
+        <div class="glass-card !p-0 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+            <h2 class="font-display font-bold">My Policies</h2>
+            <a href="#" class="text-sm text-neon hover:underline font-medium">View all →</a>
+          </div>
+          <div class="p-10 text-center">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-neon/10 border border-neon/30 flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-neon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h3 class="font-display font-bold mb-1">No policies yet</h3>
+            <p class="text-sm text-slate-400 mb-5 max-w-sm mx-auto leading-relaxed">
+              Get instant insurance for your car or bike in under 2 minutes — no paperwork, no calls.
+            </p>
+            <button class="btn-primary inline-flex items-center gap-2" data-action="quote">
+              Get Your First Quote →
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="glass-card !p-0 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5">
+            <h2 class="font-display font-bold">Recent Activity</h2>
+          </div>
+          <div class="p-10 text-center">
+            <div class="text-4xl mb-3 opacity-40">📭</div>
+            <p class="text-sm text-slate-400">No activity yet</p>
+            <p class="text-xs text-slate-600 mt-1">Your quotes, claims and renewals will show up here</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Quick actions + Account + Trust -->
+      <div class="space-y-6">
+
+        <!-- Quick actions -->
+        <div class="glass-card !p-0 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5">
+            <h2 class="font-display font-bold">Quick Actions</h2>
+          </div>
+          <div class="p-3">
+            <button class="quick-action" data-action="quote">
+              <div class="quick-action-icon bg-neon/10 border border-neon/30 text-neon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="text-left flex-1">
+                <div class="text-sm font-semibold text-white">Get a Quote</div>
+                <div class="text-xs text-slate-500">Car or bike insurance</div>
+              </div>
+              <span class="text-slate-500">→</span>
+            </button>
+
+            <button class="quick-action" data-action="claim">
+              <div class="quick-action-icon bg-violet/10 border border-violet/30 text-violet">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+              </div>
+              <div class="text-left flex-1">
+                <div class="text-sm font-semibold text-white">File a Claim</div>
+                <div class="text-xs text-slate-500">Upload damage photo</div>
+              </div>
+              <span class="text-slate-500">→</span>
+            </button>
+
+            <button class="quick-action" data-action="ask">
+              <div class="quick-action-icon bg-mint/10 border border-mint/30 text-mint">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                </svg>
+              </div>
+              <div class="text-left flex-1">
+                <div class="text-sm font-semibold text-white">Ask AI</div>
+                <div class="text-xs text-slate-500">Policy questions, 24/7</div>
+              </div>
+              <span class="text-slate-500">→</span>
+            </button>
+
+            <button class="quick-action opacity-50 cursor-not-allowed" disabled>
+              <div class="quick-action-icon bg-white/5 border border-white/10 text-slate-500">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+              <div class="text-left flex-1">
+                <div class="text-sm font-semibold text-white">Renew Policy</div>
+                <div class="text-xs text-slate-500">No policies to renew</div>
+              </div>
+              <span class="text-slate-500">→</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Account info -->
+        <div class="glass-card !p-0 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5">
+            <h2 class="font-display font-bold">Account</h2>
+          </div>
+          <div class="p-6 space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-500">Name</span>
+              <span class="font-medium text-white" id="acct-name">—</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Email</span>
+              <span class="font-medium text-white truncate ml-4" id="acct-email">—</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500">Customer ID</span>
+              <span class="font-mono text-xs text-white" id="acct-id">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acko Promise (violet gradient) -->
+        <div class="rounded-xl p-6 text-center text-white relative overflow-hidden" style="background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);">
+          <div class="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div class="relative">
+            <div class="text-2xl mb-2">🛡️</div>
+            <div class="font-display font-bold mb-1">Acko Promise</div>
+            <p class="text-xs text-white/80 leading-relaxed">
+              India's first fully digital insurer.<br>Trusted by 2.8 crore Indians.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Floating chat bubble -->
+  <button id="chat-bubble" class="chat-bubble" aria-label="Open AI chat">
+    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+    </svg>
+    <span class="chat-bubble-dot"></span>
+  </button>
+
+  <!-- Floating chat panel -->
+  <div id="chat-panel" class="chat-panel" aria-hidden="true">
+    <div class="chat-panel-header">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-br from-neon to-violet flex items-center justify-center font-display font-bold text-midnight text-sm">A</div>
+        <div>
+          <div class="font-display font-bold text-sm">Acko AI</div>
+          <div class="text-xs text-slate-400 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-mint animate-pulse"></span>
+            Online
+          </div>
+        </div>
+      </div>
+      <button id="chat-close" class="text-slate-400 hover:text-white transition p-1" aria-label="Close chat">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+
+    <div id="chat-window" class="chat-panel-body">
+      <div class="text-center py-6" id="welcome-card">
+        <div class="text-4xl mb-3">👋</div>
+        <h3 class="font-display text-lg font-bold mb-1">Hey there!</h3>
+        <p class="text-slate-400 text-xs mb-5">Ask me anything about your insurance.</p>
+        <div class="space-y-2">
+          <button class="suggested-prompt w-full text-xs" data-prompt="Does my bike insurance cover theft?">
+            🛵 Does my bike insurance cover theft?
+          </button>
+          <button class="suggested-prompt w-full text-xs" data-prompt="What is the waiting period for health insurance?">
+            🩺 Waiting period for health insurance?
+          </button>
+          <button class="suggested-prompt w-full text-xs" data-prompt="I want a quote for my 2020 Honda City">
+            💰 Get a quote for my car
+          </button>
+          <button class="suggested-prompt w-full text-xs" data-prompt="How do I file a claim for an accident?">
+            📸 How do I file a claim?
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-panel-input">
+      <form id="chat-form" class="flex gap-2">
+        <input id="user-input"
+               type="text"
+               placeholder="Ask anything..."
+               autocomplete="off"
+               class="input-field !py-2.5 !text-sm" />
+        <button id="send-btn" type="submit"
+                class="btn-primary !px-4 !py-2.5 disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+          </svg>
+        </button>
+      </form>
+      <p class="text-[10px] text-slate-600 text-center mt-2">
+        Powered by Gemini
+      </p>
+    </div>
+  </div>
+
+  <script src="../js/auth.js"></script>
+  <script src="../js/home.js"></script>
+</body>
+</html>

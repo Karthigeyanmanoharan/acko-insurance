@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager Login · Acko.ai</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['"Space Grotesk"', 'sans-serif'],
+            sans:    ['Inter', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#0a0e27',
+            surface:  '#1a1f3a',
+            neon:     '#00d9ff',
+            violet:   '#a855f7',
+            mint:     '#00ffa3',
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="font-sans text-white min-h-screen overflow-x-hidden">
+
+  <!-- Animated background (violet-tinted for manager) -->
+  <div class="fixed inset-0 -z-10 bg-midnight">
+    <div class="absolute top-0 -left-32 w-96 h-96 bg-violet/30 rounded-full blur-3xl animate-pulse"></div>
+    <div class="absolute bottom-0 -right-32 w-96 h-96 bg-violet/20 rounded-full blur-3xl animate-pulse" style="animation-delay: 1.5s;"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="relative z-10 px-6 py-5">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2 group">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-violet to-neon flex items-center justify-center font-display font-bold text-midnight">A</div>
+        <span class="font-display text-xl font-bold">Acko<span class="text-violet">.admin</span></span>
+      </a>
+      <a href="index.html" class="text-sm text-slate-400 hover:text-white transition">← Back</a>
+    </nav>
+  </header>
+
+  <!-- Login card -->
+  <main class="relative z-10 px-6 py-12 flex items-center justify-center">
+    <div class="w-full max-w-md fade-in">
+
+      <div class="text-center mb-8">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-violet/10 border border-violet/30 flex items-center justify-center mb-5">
+          <svg class="w-7 h-7 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+        <h1 class="font-display text-4xl font-bold mb-2">Manager Console</h1>
+        <p class="text-slate-400 text-sm">Restricted access · Acko employees only</p>
+      </div>
+
+      <div class="glass-card">
+        <form id="login-form" class="space-y-5">
+
+          <div>
+            <label class="input-label">Work Email</label>
+            <input id="email" type="email" required placeholder="you@acko.com" class="input-field" />
+          </div>
+
+          <div>
+            <label class="input-label">Password</label>
+            <input id="password" type="password" required placeholder="Your password" class="input-field" />
+          </div>
+
+          <!-- Status message slot -->
+          <div id="status-msg" class="hidden text-sm rounded-lg px-4 py-3"></div>
+
+          <button id="submit-btn" type="submit" class="btn-primary-violet w-full">
+            Access Dashboard →
+          </button>
+
+          <div class="flex items-center gap-2 text-xs text-slate-500 pt-2 justify-center">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+            </svg>
+            All activity is logged and audited
+          </div>
+
+        </form>
+      </div>
+
+      <p class="text-center text-xs text-slate-500 mt-6">
+        Are you a customer?
+        <a href="login-customer.html" class="text-neon hover:underline">Customer login →</a>
+      </p>
+
+    </div>
+  </main>
+
+  <script src="js/auth.js"></script>
+  <script src="js/login-manager.js"></script>
+</body>
+</html>
