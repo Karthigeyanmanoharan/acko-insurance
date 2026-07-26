@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 
 from database import get_db
-from models import User
+from sql_table import User
 
 # Router — groups all auth-related endpoints under /auth/...
 router = APIRouter(prefix="/auth", tags=["Authentication"])

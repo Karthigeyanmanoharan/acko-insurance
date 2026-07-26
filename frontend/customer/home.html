@@ -299,19 +299,22 @@
         <h3 class="font-display text-lg font-bold mb-1">Hey there!</h3>
         <p class="text-slate-400 text-xs mb-5">Ask me anything about your insurance.</p>
         <div class="space-y-2">
-          <button class="suggested-prompt w-full text-xs" data-prompt="Does my bike insurance cover theft?">
-            🛵 Does my bike insurance cover theft?
-          </button>
-          <button class="suggested-prompt w-full text-xs" data-prompt="What is the waiting period for health insurance?">
-            🩺 Waiting period for health insurance?
-          </button>
-          <button class="suggested-prompt w-full text-xs" data-prompt="I want a quote for my 2020 Honda City">
-            💰 Get a quote for my car
-          </button>
-          <button class="suggested-prompt w-full text-xs" data-prompt="How do I file a claim for an accident?">
-            📸 How do I file a claim?
-          </button>
-        </div>
+  <button class="suggested-prompt w-full text-xs" data-prompt="Does my bike insurance cover theft?">
+    🛵 Does my bike insurance cover theft?
+  </button>
+  <button class="suggested-prompt w-full text-xs" data-prompt="What is the waiting period for health insurance?">
+    🩺 Waiting period for health insurance?
+  </button>
+  <button class="suggested-prompt w-full text-xs quote-trigger" data-quote-type="bike">
+    💰 Get a bike insurance quote
+  </button>
+  <button class="suggested-prompt w-full text-xs quote-trigger" data-quote-type="car">
+    🚗 Get a car insurance quote
+  </button>
+  <button class="suggested-prompt w-full text-xs quote-trigger" data-quote-type="health">
+    🩺 Get a health insurance quote
+  </button>
+      </div>
       </div>
     </div>
 
@@ -337,5 +340,6 @@
 
   <script src="../js/auth.js"></script>
   <script src="../js/home.js"></script>
+  <script src="../js/quote_widget.js"></script>
 </body>
 </html>

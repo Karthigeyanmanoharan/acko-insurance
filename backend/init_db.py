@@ -1,12 +1,9 @@
-from database import Base, engine, DB_PATH
-import models
+# backend/init_db.py
+from database import Base, engine
+import sql_table  # registers all table classes
 
-
-
-print(f"📍 Database file path: {DB_PATH}")
-print('Creating tables')
+print("Creating tables in PostgreSQL...")
 Base.metadata.create_all(bind=engine)
-print("✅ Done. Tables created in acko.db:")
-
-for table_name in Base.metadata.tables.keys():
-    print(f"   - {table_name}")
+print("✅ Done. Tables created:")
+for table in Base.metadata.tables.keys():
+    print(f"   - {table}")

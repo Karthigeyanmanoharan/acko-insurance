@@ -94,52 +94,126 @@ document.querySelectorAll(".quick-action[data-action], [data-action]").forEach((
 document.addEventListener("click", (e) => {
   const btn = e.target.closest(".suggested-prompt");
   if (!btn) return;
+
+  // If it's a quote trigger button, show the form instead of sending a message
+  if (btn.classList.contains("quote-trigger")) {
+    const type = btn.dataset.quoteType;
+    if (welcomeCard) welcomeCard.style.display = "none";
+    showQuoteForm(type, chatWindow, welcomeCard);
+    if (!panel.classList.contains("is-open")) openChat();
+    return;
+  }
+
+  // Otherwise send the prompt text to the chatbot as normal
   userInput.value = btn.dataset.prompt;
   sendMessage();
 });
+
+function formatMessage(text) {
+  return text
+    // **bold** → <strong>
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    // *italic* or *bullet* at line start → bullet point
+    .replace(/^\* (.+)$/gm, '<li>$1</li>')
+    // wrap consecutive <li> items in <ul>
+    .replace(/(<li>.*<\/li>)/gs, '<ul class="list-disc pl-4 space-y-1 my-2">$1</ul>')
+    // line breaks
+    .replace(/\n/g, '<br>');
+}
 
 // ---------------------------------------------------------------------------
 // 8. Chat — sending and receiving messages
 // ---------------------------------------------------------------------------
 function addMessage(text, sender) {
-  // Hide the welcome card on first real message
   if (welcomeCard) welcomeCard.style.display = "none";
 
   const row = document.createElement("div");
-  row.className = "msg-row " + sender;
 
-  const bubble = document.createElement("div");
-  bubble.className = "msg-bubble " + sender;
-  bubble.textContent = text;
+  if (sender === "user") {
+    row.className = "msg-row user";
+    const bubble = document.createElement("div");
+    bubble.className = "msg-bubble user";
+    bubble.textContent = text;
+    row.appendChild(bubble);
+  } else {
+    row.className = "msg-row bot-row";
 
-  row.appendChild(bubble);
+    // Avatar
+    const avatar = document.createElement("div");
+    avatar.className = "bot-avatar";
+    avatar.textContent = "A";
+
+    // Bubble wrapper
+    const bubbleWrap = document.createElement("div");
+    bubbleWrap.style.flex = "1";
+
+    const bubble = document.createElement("div");
+    bubble.className = "msg-bubble bot";
+    bubble.innerHTML = formatBotMessage(text);
+
+    bubbleWrap.appendChild(bubble);
+    row.appendChild(avatar);
+    row.appendChild(bubbleWrap);
+  }
+
   chatWindow.appendChild(row);
   chatWindow.scrollTop = chatWindow.scrollHeight;
-  return bubble;
+  return row;
+}
+
+function formatBotMessage(text) {
+  // Detect which source we're answering from for the label
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/^\* (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
+    .replace(/\n/g, '<br>');
 }
 
 function addSourcesNote(sources) {
   const row = document.createElement("div");
-  row.className = "msg-row";
+  row.className = "msg-source-row";
 
-  const note = document.createElement("div");
-  note.className = "text-xs text-slate-500 px-2 -mt-2 mb-1";
-  note.textContent = "📎 Source: " + sources.join(" · ");
+  // Get unique filenames, shorten them
+  const unique = [...new Set(sources.map(s => s.split(" - ")[0]))];
 
-  row.appendChild(note);
+  unique.forEach(file => {
+    const tag = document.createElement("span");
+    const isHealth = file.toLowerCase().includes("health");
+    tag.className = "msg-source-tag" + (isHealth ? " health" : "");
+
+    const page = sources.find(s => s.includes(file))?.split("page ")[1] || "?";
+    const label = file
+      .replace("Acko_", "")
+      .replace("_Insurance_Policy_TC.pdf", " Policy")
+      .replace("_Insurance_FAQs.pdf", " FAQs")
+      .replace("_Motor", " Motor")
+      .replace("_Health", " Health")
+      .replace(/_/g, " ")
+      .trim();
+
+    tag.textContent = `📎 ${label} · p${page}`;
+    row.appendChild(tag);
+  });
+
   chatWindow.appendChild(row);
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 function addTypingIndicator() {
   const row = document.createElement("div");
-  row.className = "msg-row";
+  row.className = "msg-row bot-row";
   row.id = "typing-indicator";
+
+  const avatar = document.createElement("div");
+  avatar.className = "bot-avatar";
+  avatar.textContent = "A";
 
   const bubble = document.createElement("div");
   bubble.className = "msg-bubble bot typing-dots";
   bubble.innerHTML = "<span>●</span><span>●</span><span>●</span>";
 
+  row.appendChild(avatar);
   row.appendChild(bubble);
   chatWindow.appendChild(row);
   chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -160,6 +234,83 @@ async function sendMessage() {
   addTypingIndicator();
 
   try {
+    // --------------- Intent detection (Module 2) ---------------
+    // detectQuoteIntent is defined in quote_widget.js
+    if (typeof detectQuoteIntent === "function") {
+      const intent = detectQuoteIntent(message);
+
+      if (intent === "bike_quote") {
+        removeTypingIndicator();
+        addMessage("Sure! Here's the bike insurance quote form for you. 🛵", "bot");
+        showQuoteForm("bike", chatWindow, welcomeCard);
+        return;
+      }
+
+      if (intent === "car_quote") {
+        removeTypingIndicator();
+        addMessage("Sure! Here's the car insurance quote form for you. 🚗", "bot");
+        showQuoteForm("car", chatWindow, welcomeCard);
+        return;
+      }
+
+      if (intent === "health_quote") {
+        removeTypingIndicator();
+        addMessage("Sure! Here's the health insurance quote form for you. 🩺", "bot");
+        showQuoteForm("health", chatWindow, welcomeCard);
+        return;
+      }
+
+      if (intent === "ask_type") {
+        removeTypingIndicator();
+
+        // Show a type-picker bubble in the chat
+        const row = document.createElement("div");
+        row.className = "msg-row bot-row";
+
+        const avatar = document.createElement("div");
+        avatar.className = "bot-avatar";
+        avatar.textContent = "A";
+
+        const bubbleWrap = document.createElement("div");
+        bubbleWrap.style.flex = "1";
+
+        const bubble = document.createElement("div");
+        bubble.className = "msg-bubble bot";
+        bubble.innerHTML = `
+          <div style="margin-bottom:10px">
+            What type of insurance quote would you like?
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="quote-type-btn" data-type="bike">🛵 Bike</button>
+            <button class="quote-type-btn" data-type="car">🚗 Car</button>
+            <button class="quote-type-btn" data-type="health">🩺 Health</button>
+          </div>`;
+
+        bubbleWrap.appendChild(bubble);
+        row.appendChild(avatar);
+        row.appendChild(bubbleWrap);
+        chatWindow.appendChild(row);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+
+        // Wire the type buttons
+        bubble.querySelectorAll(".quote-type-btn").forEach(btn => {
+          btn.addEventListener("click", () => {
+            // Hide buttons after selection
+            bubble.querySelectorAll(".quote-type-btn")
+              .forEach(b => b.style.display = "none");
+            bubble.innerHTML += `
+              <div style="color:#00ffa3;font-size:12px;margin-top:6px">
+                Opening ${btn.dataset.type} quote form...
+              </div>`;
+            showQuoteForm(btn.dataset.type, chatWindow, welcomeCard);
+          });
+        });
+        return;
+      }
+    }
+    // --------------- End intent detection ---------------
+
+    // Default: send to RAG chatbot as normal
     const res = await fetch(`${API_BASE}/chat`, {
       method: "POST",
       headers: {
@@ -192,8 +343,15 @@ async function sendMessage() {
     userInput.focus();
   }
 }
+function showQuoteForm(type, chatWindow, welcomeCard) {
+  // This gets overridden by quote_widget.js once it loads.
+  // Acts as a safe fallback if quote_widget.js hasn't loaded yet.
+  addMessage(`Opening ${type} insurance quote form...`, "bot");
+}
 
 chatForm.addEventListener("submit", (e) => {
   e.preventDefault();
   sendMessage();
 });
+
+

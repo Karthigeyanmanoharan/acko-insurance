@@ -1,59 +1,67 @@
+# backend/main.py
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
-from fastapi.middleware.cors import CORSMiddleware
-import google.generativeai as genai
-import auth
-from ai.rag_pipeline import rag_answer
-from fastapi import Depends
 from sqlalchemy.orm import Session
-from database import get_db
-from models import ChatLog
-from auth import get_current_user
+import google.generativeai as genai
 
+import auth
+from routers import quote
+from ai.rag_pipeline import rag_answer
+from database import get_db
+from sql_table import ChatLog
+from auth import get_current_user
 
 load_dotenv(dotenv_path="../.env")
 
-gemini_api_key=os.getenv("GEMINI_API_KEY")
-
-if not gemini_api_key:
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
     raise RuntimeError("GEMINI_API_KEY not found. Check your .env file.")
 
-genai.configure(api_key=gemini_api_key)
+genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
 app = FastAPI(title="Acko Insurance AI - Backend")
 
-app.include_router(auth.router)
-
+# CORS must be added BEFORE routers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # for development only; tighten later
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+# Routers
+app.include_router(auth.router)
+app.include_router(quote.router)
 
-class ChatRequest(BaseModel):
-    message:str
 
+# ---------------------------------------------------------------------------
+# Root health check
+# ---------------------------------------------------------------------------
 @app.get("/")
 def root():
     return {"status": "ok", "message": "Acko backend is running"}
 
+
+# ---------------------------------------------------------------------------
+# Chat endpoint — RAG chatbot (Module 1)
+# ---------------------------------------------------------------------------
+class ChatRequest(BaseModel):
+    message: str
 
 
 @app.post("/chat")
 def chat(
     request: ChatRequest,
     db: Session = Depends(get_db),
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
 ):
     answer, sources = rag_answer(request.message, model)
 
-    # Log this Q&A so managers can review it later (Module 1 requirement)
     log_entry = ChatLog(
         user_id=current_user.id,
         intent="policy_qa",

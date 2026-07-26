@@ -1,18 +1,28 @@
+# backend/database.py
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
+from dotenv import load_dotenv
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "acko.db")
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{DB_PATH}"
-engine=create_engine(SQLALCHEMY_DATABASE_URL,connect_args={"check_same_thread":False},)
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, "..", ".env"))
 
-sessionLocal=sessionmaker(autocommit=False,autoflush=False,bind=engine)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-Base=declarative_base()
+if not DATABASE_URL:
+    DB_PATH = os.path.join(BASE_DIR, "acko.db")
+    DATABASE_URL = f"sqlite:///{DB_PATH}"
+    connect_args = {"check_same_thread": False}
+else:
+    connect_args = {}
+
+engine = create_engine(DATABASE_URL, connect_args=connect_args)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
 
 def get_db():
-    db=sessionLocal()
+    db = SessionLocal()
     try:
         yield db
     finally:
